@@ -1,0 +1,22 @@
+{
+  "name": "threejs",
+  "version": "1.0.0",
+  "description": "自行整理, 后续上课要用.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neonevins/three.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neonevins/three/issues"
+  },
+  "homepage": "https://github.com/neonevins/three#readme",
+  "dependencies": {
+    "three": "^0.106.2"
+  }
+}
