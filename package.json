@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/neonevins/three#readme",
   "dependencies": {
+    "babel": "^6.23.0",
     "three": "^0.106.2"
   }
 }
