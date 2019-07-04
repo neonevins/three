@@ -1,6 +1,6 @@
 # three额外的包
 
-1. 控制器包:
+1. **控制器**包:
 
    可以通过上下左右按键键和鼠标拖拽, 移动相机, 控制显示位置
 
@@ -16,7 +16,16 @@
   // renderer.domElement canvas dom对象
   
   const controls = THREE.OrbitControls(camera, renderer.domElement)
+  controls.update()
   
+  function animate(){
+    requestAnimationFrame(animate)
+    
+    controls.update()
+    // ...其余动画操作, 保持一致
+    // 绘制
+    renderer.render( scene, camera );
+  }
 </script>
 ```
 
