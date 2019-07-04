@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    *{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+  <script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>
+</head>
+<body>
+  <script>
+    // 新建渲染模型, 包含渲染canvas, 设置模型大小,并添加到dom结构中
+    let renderer = new THREE.WebGLRenderer()
+    renderer.setSize( window.innerWidth, window.innerHeight )
+    document.body.appendChild( renderer.domElement )
+
+    // 设置相机
+    let camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
+    camera.position.set( 0, 0, 100 );
+    camera.lookAt( 0, 0, 0 );
+
+    let merterial = new THREE.LineBasicMaterial({color: 0x0000ff })
+
+    let geometry = new THREE.Geometry()
+
+    geometry.vertices.push(new THREE.Vector3(-10, 0, 0))
+    geometry.vertices.push(new THREE.Vector3(0, 10, 0))
+    geometry.vertices.push(new THREE.Vector3(10, 0, 0))
+    
+
+    let line = new THREE.Line(geometry, merterial)
+
+    let scene = new THREE.Scene()
+
+    scene.add(line)
+
+    renderer.render(scene, camera)
+  </script>
+</body>
+</html>
