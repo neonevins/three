@@ -1,0 +1,107 @@
+
+<!--
+  ~ Copyright (c) 2019.
+  ~ Power By Yinshi
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    *{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+  import * as THREE from '../../build/three.module.js'
+  import {OrbitControls } from '../../build/OrbitControls.js';
+  import {FlyControls } from "../../build/FlyControls.js"
+  const clock = new THREE.Clock()
+  function getRender({width,height,dom}){
+    const renderer = new THREE.WebGLRenderer()
+    renderer.setSize( width, height)
+    dom.appendChild(renderer.domElement)
+    return renderer
+  }
+
+  function renderLine({color, vectorPath}){
+    // 新建线条材质
+    const merterial = new THREE.LineBasicMaterial({ color })
+    // 新建几何体
+    const geometry = new THREE.Geometry()
+    // 传入点
+    vectorPath.forEach(item => {
+      geometry.vertices.push(new THREE.Vector3(...item))
+    })
+    // 画线操作
+    return new THREE.Line(geometry, merterial)
+  }
+
+
+  function renderCube(w1 = 100,w2 = 100,w3 = 100){
+    let geometry = new THREE.BoxGeometry( w1, w2, w3 )
+    // 新建材质包
+    let material = new THREE.MeshNormalMaterial()
+    // 模型材质混合, 构造网状体
+    return new THREE.Mesh( geometry, material )
+  }
+
+  const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 )
+  camera.position.set( 0, 0, 300 )
+  camera.lookAt( 0, 0, 0 )
+
+
+
+
+
+  const renderer = getRender({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    dom: document.body
+  })
+  const line = renderLine({
+    color: 0x0000ff,
+    vectorPath: [
+      [-10, 0, 0],
+      [0, 10, 0],
+      [10, 0, 0],
+    ]
+  })
+
+  const cube = renderCube()
+
+  const scene = new THREE.Scene()
+
+  scene.add(cube)
+  // const controls = new OrbitControls(camera, renderer.domElement)
+  // controls.update()
+
+  function createControls(camera){
+    const controls = new FlyControls( camera )
+    controls.movementSpeed = 100
+    controls.rollSpeed = Math.PI / 6
+    controls.autoForward = false
+    controls.dragToLook = true
+    return controls
+  }
+
+  const controls = createControls(camera)
+
+  function animate(){
+    requestAnimationFrame(animate)
+    const delta = clock.getDelta()
+    controls.update(delta)
+    renderer.render( scene, camera )
+  }
+  animate()
+
+</script>
+</body>
+</html>
