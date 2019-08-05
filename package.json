@@ -18,6 +18,8 @@
   "homepage": "https://github.com/neonevins/three#readme",
   "dependencies": {
     "babel": "^6.23.0",
-    "three": "^0.106.2"
+    "express": "^4.17.1",
+    "three": "^0.106.2",
+    "three-orbitcontrols": "^2.102.2"
   }
 }
