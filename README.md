@@ -1,11 +1,13 @@
 # THREE笔记
 
-自行整理, 后续上课要用.
+自行整理, 后续要用.
 
-其中three.js代码来自cdn
+其中three.js代码来自[three](https://github.com/mrdoob/three.js.git)
 
-```html
-<!-- 2019/07/02 -->
-<script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>
-```
+使用方法: 
 
+git clone
+
+npm i
+
+node app.js
