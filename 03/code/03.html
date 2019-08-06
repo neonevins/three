@@ -1,0 +1,108 @@
+<!--
+  ~ Copyright (c) 2019.
+  ~ Power By Yinshi
+  -->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>MMD</title>
+  <style>
+    body{margin: 0;overflow: hidden}
+  </style>
+</head>
+<body>
+<script type="module">
+  import * as THREE from '../../build/three.module.js'
+  const clock = new THREE.Clock()
+  import { MMDLoader } from '../../build/MMDLoader.js'
+  import { OrbitControls } from '../../build/OrbitControls.js'
+  
+  //camera
+  const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 )
+  camera.position.set( 0, 0, 30 )
+  camera.lookAt( 0, 0, 0 )
+  
+  //render
+  function getRender({width,height,dom}){
+    const renderer = new THREE.WebGLRenderer()
+    renderer.setSize( width, height)
+    dom.appendChild(renderer.domElement)
+    return renderer
+  }
+  const renderer = getRender({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    dom: document.body
+  })
+  
+  //scene
+  const scene = new THREE.Scene()
+  renderer.gammaOutput = true
+  // scene.background = new THREE.Color( 0xffffff )
+  
+  // 网格助手
+  const gridHelper = new THREE.PolarGridHelper( 30, 10 )
+  gridHelper.position.y = - 10
+  scene.add( gridHelper )
+  
+  // 环境光
+  const ambient = new THREE.AmbientLight( 0x666666 )
+  scene.add( ambient )
+
+  //控制器
+  function createDragControls(camera){
+    return new OrbitControls( camera )
+  }
+
+  const controls = createDragControls(camera)
+
+  function onProgress( xhr ) {
+    if ( xhr.lengthComputable ) {
+      const percentComplete = xhr.loaded / xhr.total * 100;
+      console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
+    }
+  }
+  
+  
+  
+  //MMD load
+  const mmdLoader = new MMDLoader()
+  
+  mmdLoader.loadWithAnimation(
+    "./models/mmd/miku/miku_v2.pmd",
+    "./models/mmd/vmds/wavefile_v2.vmd",
+    function ( mmd ) {
+    let mesh = mmd.mesh;
+    mesh.position.y = - 10;
+    scene.add( mesh )
+    helper.add( mesh, {
+      animation: mmd.animation,
+      physics: true
+    } );
+    ikHelper = helper.objects.get( mesh ).ikSolver.createHelper();
+    ikHelper.visible = false;
+    scene.add( ikHelper );
+    physicsHelper = helper.objects.get( mesh ).physics.createHelper();
+    physicsHelper.visible = false;
+    scene.add( physicsHelper );
+    initGui();
+  }, onProgress, null );
+  
+  
+  //渲染
+  function animate(){
+    requestAnimationFrame(animate)
+    const delta = clock.getDelta()
+    controls.update(delta)
+    renderer.render( scene, camera )
+  }
+  animate()
+  
+</script>
+</body>
+</html>

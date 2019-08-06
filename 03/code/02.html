@@ -10,7 +10,7 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>glTF</title>
   <style>
     *{margin: 0;overflow: hidden}
   </style>
@@ -42,8 +42,8 @@
     dom: document.body
   })
   const scene = new THREE.Scene()
-  renderer.gammaOutput = true;
-  console.log(new RGBELoader())
+  renderer.gammaOutput = true
+  
   new RGBELoader()
     .setType( THREE.UnsignedByteType )
     .setPath( 'textures/equirectangular/' )
