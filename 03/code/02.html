@@ -1,0 +1,98 @@
+<!--
+  ~ Copyright (c) 2019.
+  ~ Power By Yinshi
+  -->
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    *{margin: 0;overflow: hidden}
+  </style>
+</head>
+<body>
+<script type="module">
+  import * as THREE from '../../build/three.module.js'
+  import { OrbitControls } from '../../build/OrbitControls.js'
+  import { FlyControls } from "../../build/FlyControls.js"
+  import { GLTFLoader } from '../../build/GLTFLoader.js'
+  import { RGBELoader } from '../../build/RGBELoader.js'
+  import { PMREMCubeUVPacker } from '../../build/PMREMCubeUVPacker.js'
+  import { EquirectangularToCubeGenerator } from '../../build/EquirectangularToCubeGenerator.js'
+  import { PMREMGenerator } from '../../build/PMREMGenerator.js'
+  const clock = new THREE.Clock()
+  function getRender({width,height,dom}){
+    const renderer = new THREE.WebGLRenderer()
+    renderer.setSize( width, height)
+    dom.appendChild(renderer.domElement)
+    return renderer
+  }
+  const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 )
+  camera.position.set( 0, 0, 2 )
+  camera.lookAt( 0, 0, 0 )
+
+  const renderer = getRender({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    dom: document.body
+  })
+  const scene = new THREE.Scene()
+  renderer.gammaOutput = true;
+  console.log(new RGBELoader())
+  new RGBELoader()
+    .setType( THREE.UnsignedByteType )
+    .setPath( 'textures/equirectangular/' )
+    .load( 'pedestrian_overpass_2k.hdr', function ( texture ) {
+      const cubeGenerator = new EquirectangularToCubeGenerator( texture, { resolution: 1024 } )
+      cubeGenerator.update( renderer )
+      const pmremGenerator = new PMREMGenerator( cubeGenerator.renderTarget.texture )
+      pmremGenerator.update( renderer )
+      const pmremCubeUVPacker = new PMREMCubeUVPacker( pmremGenerator.cubeLods )
+      pmremCubeUVPacker.update( renderer )
+      const envMap = pmremCubeUVPacker.CubeUVRenderTarget.texture
+      // model
+      const loader = new GLTFLoader().setPath( 'models/gltf/DamagedHelmet/glTF/' )
+      loader.load( 'DamagedHelmet.gltf', function ( gltf ) {
+        gltf.scene.traverse( function ( child ) {
+          if ( child.isMesh ) {
+            child.material.envMap = envMap
+          }
+        })
+        scene.add( gltf.scene )
+      })
+      pmremGenerator.dispose()
+      pmremCubeUVPacker.dispose()
+      scene.background = cubeGenerator.renderTarget
+    })
+  
+  scene.background = new THREE.Color( 0xaaccff )
+
+  function createFlyControls(camera){
+    const controls = new FlyControls( camera )
+    controls.movementSpeed = 100
+    controls.rollSpeed = Math.PI / 6
+    controls.autoForward = false
+    controls.dragToLook = true
+    return controls
+  }
+  function createDragControls(camera){
+    return new OrbitControls( camera )
+  }
+
+  const controls = createDragControls(camera)
+
+  function animate(){
+    requestAnimationFrame(animate)
+    const delta = clock.getDelta()
+    controls.update(delta)
+    renderer.render( scene, camera )
+  }
+  animate()
+</script>
+</body>
+</html>
