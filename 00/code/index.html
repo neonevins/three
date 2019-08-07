@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <style>
-    body { margin: 0; }
+    body { margin: 0; overflow: hidden}
     canvas { width: 100%; height: 100% }
   </style>
   <title>Document</title>
-  <script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>
+<!--  <script src="https://cdn.bootcss.com/three.js/r83/three.min.js"></script>-->
 </head>
 <body>
-  <script>
+  <script type="module">
+    import * as THREE from "../../build/three.module.js"
     // 新建矩形模型, 设置边长 x, y, z
     let geometry = new THREE.BoxGeometry( 1, 2, 3 )
     // 新建材质包
